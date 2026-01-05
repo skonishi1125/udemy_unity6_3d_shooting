@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     [Header("Movement info")]
     public float walkSpeed;
     public Vector3 movementDirection;
+    [SerializeField] private float gravityScale = 9.81f;
+
+    private float verticalVelocity;
 
     private Vector2 moveInput;
     private Vector2 aimInput;
@@ -36,12 +39,26 @@ public class Player : MonoBehaviour
     private void ApplyMovement()
     {
         movementDirection = new Vector3(moveInput.x, 0, moveInput.y);
+        ApplyGravity();
 
         // Magnitude: ベクトルの大きさ(長さ)
         // ゼロより大きければ何らかの入力があるということ
         if (movementDirection.magnitude > 0)
         {
             characterController.Move(movementDirection * Time.deltaTime * walkSpeed);
+        }
+    }
+
+    private void ApplyGravity()
+    {
+        if (characterController.isGrounded == false)
+        {
+            verticalVelocity = verticalVelocity - gravityScale * Time.deltaTime;
+            movementDirection.y = verticalVelocity;
+        }
+        else
+        {
+            verticalVelocity = -.5f;
         }
     }
 

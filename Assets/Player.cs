@@ -9,8 +9,13 @@ public class Player : MonoBehaviour
     public float walkSpeed;
     public Vector3 movementDirection;
     [SerializeField] private float gravityScale = 9.81f;
-
     private float verticalVelocity;
+
+    [Header("Aim info")]
+    [SerializeField] private Transform aim;
+    [SerializeField] private LayerMask aimLayerMask;
+    private Vector3 lookingDirection;
+
 
     private Vector2 moveInput;
     private Vector2 aimInput;
@@ -34,6 +39,24 @@ public class Player : MonoBehaviour
     private void Update()
     {
         ApplyMovement();
+        AimTowardsMouse();
+    }
+
+    private void AimTowardsMouse()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(aimInput);
+        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, aimLayerMask))
+        {
+            // Playerからポインタへ向かうベクトル
+            lookingDirection = hitInfo.point - transform.position;
+            lookingDirection.y = 0f;
+            lookingDirection.Normalize(); // 上で求めたベクトルを単位ベクトルにする(方向だけ取り出す)
+
+            transform.forward = lookingDirection;
+
+            aim.position = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+
+        }
     }
 
     private void ApplyMovement()

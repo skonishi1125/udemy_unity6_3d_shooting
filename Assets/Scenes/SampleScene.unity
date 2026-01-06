@@ -1126,7 +1126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f9100464a3ebd74c9df2ce15a3dad72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 4
+  walkSpeed: 1.5
+  runSpeed: 3
   movementDirection: {x: 0, y: 0, z: 0}
   gravityScale: 9.81
   aim: {fileID: 832030654}

@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private PlayerControls controls;
     private CharacterController characterController;
     private Animator animator;
 
     [Header("Movement info")]
-    public float walkSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
+    private float speed;
     public Vector3 movementDirection;
     [SerializeField] private float gravityScale = 9.81f;
     private float verticalVelocity;
+    private bool isRunning;
 
     [Header("Aim info")]
     [SerializeField] private Transform aim;
@@ -23,19 +26,17 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        controls = new PlayerControls();
-
-        controls.Character.Movement.performed += context => moveInput = context.ReadValue<Vector2>();
-        controls.Character.Movement.canceled += context => moveInput = Vector2.zero;
-
-        controls.Character.Aim.performed += context => aimInput = context.ReadValue<Vector2>();
-        controls.Character.Aim.canceled += context => aimInput = Vector2.zero;
+        AssignInputEvents();
     }
+
+
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+
+        speed = walkSpeed;
     }
 
     private void Update()
@@ -71,6 +72,10 @@ public class Player : MonoBehaviour
 
         animator.SetFloat("xVelocity", xVelocity, .1f, Time.deltaTime);
         animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
+
+        // 走行中かつ、しっかり移動ベクトルの大きさがある場合
+        bool playRunAnimation = isRunning && movementDirection.magnitude > 0;
+        animator.SetBool("isRunning", playRunAnimation);
     }
 
     private void AimTowardsMouse()
@@ -99,7 +104,7 @@ public class Player : MonoBehaviour
         // ゼロより大きければ何らかの入力があるということ
         if (movementDirection.magnitude > 0)
         {
-            characterController.Move(movementDirection * Time.deltaTime * walkSpeed);
+            characterController.Move(movementDirection * Time.deltaTime * speed);
         }
     }
 
@@ -121,7 +126,28 @@ public class Player : MonoBehaviour
         Debug.Log("shoot");
     }
 
+    private void AssignInputEvents()
+    {
+        controls = new PlayerControls();
 
+        controls.Character.Movement.performed += context => moveInput = context.ReadValue<Vector2>();
+        controls.Character.Movement.canceled += context => moveInput = Vector2.zero;
+
+        controls.Character.Aim.performed += context => aimInput = context.ReadValue<Vector2>();
+        controls.Character.Aim.canceled += context => aimInput = Vector2.zero;
+
+        controls.Character.Run.performed += context =>
+        {
+            speed = runSpeed;
+            isRunning = true;
+        };
+
+        controls.Character.Run.canceled += context =>
+        {
+            speed = walkSpeed;
+            isRunning = false;
+        };
+    }
     private void OnEnable()
     {
         controls.Enable();

@@ -4,6 +4,7 @@ public class Player : MonoBehaviour
 {
     private PlayerControls controls;
     private CharacterController characterController;
+    private Animator animator;
 
     [Header("Movement info")]
     public float walkSpeed;
@@ -34,12 +35,42 @@ public class Player : MonoBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
     {
         ApplyMovement();
         AimTowardsMouse();
+        AnimatorController();
+    }
+
+    private void AnimatorController()
+    {
+        /* 
+            ベクトル
+            movementDirection.normalized
+                移動の向きだけ取得(長さ1のベクトル)
+            transform.right / forward
+                キャラクタ基準の右と前の座標（ローカルx+と、ローカルz+）のこと
+                つまりキャラが回ると、この軸も回る
+            Vector3.Dot(a,b)
+                aとbの内積。cosθはベクトルa・ベクトルb / |a| |b|で求められる。
+                単位ベクトル同士の場合、分母が1なので、結果的にcosθが返る。
+                つまり -1 : 180°(真逆) 0: 90°(直交) +1: 0°(真正面) という結果になる
+            xVelocity
+                移動方向と右向きを比較。
+                1なら完全に右向き 0なら右でも左でもない(右軸に直交) -1なら左向きであることを示す
+            zVelocity
+                移動方向と前向きを比較。
+                1なら完全に真正面 0なら前でも後ろでもない(左軸に直交) -1なら後ろ向きであることを示す値となる。
+
+         */
+        float xVelocity = Vector3.Dot(movementDirection.normalized, transform.right);
+        float zVelocity = Vector3.Dot(movementDirection.normalized, transform.forward);
+
+        animator.SetFloat("xVelocity", xVelocity, .1f, Time.deltaTime);
+        animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
     }
 
     private void AimTowardsMouse()

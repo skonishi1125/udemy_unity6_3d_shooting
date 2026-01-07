@@ -1089,7 +1089,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040055449}
+  - component: {fileID: 2040055453}
   - component: {fileID: 2040055450}
+  - component: {fileID: 2040055452}
   - component: {fileID: 2040055451}
   m_Layer: 0
   m_Name: Player
@@ -1160,6 +1162,30 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.66, z: 0}
+--- !u!114 &2040055452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040055445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae1446722fed774c8ff11145c4378dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2040055453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040055445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 113f33adb11c3b240b51df41f85d8946, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &40977700890807296
 Transform:
   m_ObjectHideFlags: 0

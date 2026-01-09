@@ -9,7 +9,7 @@ public class PlayerAim : MonoBehaviour
     [SerializeField] private Transform aim;
 
     [SerializeField] private bool isAimingPrecisly;
-
+    [SerializeField] private bool isLockingToTarget;
 
     [Header("Camera Control")]
     [SerializeField] private Transform cameraTarget;
@@ -36,8 +36,24 @@ public class PlayerAim : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
             isAimingPrecisly = !isAimingPrecisly;
 
+        if (Input.GetKeyDown(KeyCode.L))
+            isLockingToTarget = !isLockingToTarget;
+
         UpdateAimPosition();
         UpdateCameraPosition();
+    }
+
+    public Transform Target()
+    {
+        Transform target = null;
+
+        // マウスの位置にTargetがいた場合、ターゲットにポジションを固定させて当てやすくしている
+        if(GetMouseHitInfo().transform.GetComponent<Target>() != null)
+        {
+            target = GetMouseHitInfo().transform;
+        }
+
+        return target;
     }
 
     private void UpdateCameraPosition()
@@ -47,6 +63,16 @@ public class PlayerAim : MonoBehaviour
 
     private void UpdateAimPosition()
     {
+
+        
+        Transform target = Target();
+        if (target != null && isLockingToTarget)
+        {
+            aim.position = target.position;
+            Debug.Log("target");
+            return;
+        }
+
         aim.position = GetMouseHitInfo().point;
 
         // Obstacleなどにエイムが乗っても、高さを考慮して打つかどうかのフラグ

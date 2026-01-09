@@ -39,7 +39,7 @@ public class PlayerWeaponController : MonoBehaviour
         // 出てきた単位ベクトルのdirectionを、後でbulletSpeedをかけて、大きさを加えてやる。
         Vector3 direction = (aim.position - gunPoint.position).normalized;
 
-        if (player.aim.CanAimPrecisly() == false)
+        if (player.aim.CanAimPrecisly() == false && player.aim.Target() == null)
             direction.y = 0; // 上下方向を無視して水平に飛ばすようにしている
 
         weaponHolder.LookAt(aim);
@@ -48,10 +48,10 @@ public class PlayerWeaponController : MonoBehaviour
         return direction;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(weaponHolder.position, weaponHolder.position + weaponHolder.forward * 25);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(gunPoint.position, gunPoint.position + BulletDirection() * 25);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.DrawLine(weaponHolder.position, weaponHolder.position + weaponHolder.forward * 25);
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawLine(gunPoint.position, gunPoint.position + BulletDirection() * 25);
+    //}
 }

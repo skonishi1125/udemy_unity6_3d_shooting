@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerAim : MonoBehaviour
 {
     private Player player;
     private PlayerControls controls;
+
+    [Header("Aim Visual - Laser")]
+    [SerializeField] private LineRenderer aimLaser;
 
     [Header("Aim control")]
     [SerializeField] private Transform aim;
@@ -39,8 +43,22 @@ public class PlayerAim : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
             isLockingToTarget = !isLockingToTarget;
 
+        UpdateAimLaser();
         UpdateAimPosition();
         UpdateCameraPosition();
+    }
+
+    private void UpdateAimLaser()
+    {
+        Transform gunPoint = player.weapon.GunPoint();
+        Vector3 laserDirection = player.weapon.BulletDirection();
+        float gunDistance = 4;
+
+        // Line Rendererの位置を銃口にセット
+        // 指定した距離の分だけ伸ばす
+        aimLaser.SetPosition(0, gunPoint.position);
+        Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
+        aimLaser.SetPosition(1, endPoint);
     }
 
     public Transform Target()

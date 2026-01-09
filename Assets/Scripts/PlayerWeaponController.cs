@@ -31,7 +31,7 @@ public class PlayerWeaponController : MonoBehaviour
     }
 
     // 弾丸の方向決定
-    private Vector3 BulletDirection()
+    public Vector3 BulletDirection()
     {
         // direction = aim - gunPoint
         // ベクトルは、終点 - 始点で表せる。なので、マウスポジションに向かってgunPointから伸びるベクトルを表す
@@ -47,6 +47,8 @@ public class PlayerWeaponController : MonoBehaviour
 
         return direction;
     }
+
+    public Transform GunPoint() => gunPoint;
 
     //private void OnDrawGizmos()
     //{

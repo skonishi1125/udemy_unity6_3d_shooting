@@ -8,14 +8,16 @@ public class PlayerAim : MonoBehaviour
     [Header("Aim control")]
     [SerializeField] private Transform aim;
 
+    [SerializeField] private bool isAimingPrecisly;
+
 
     [Header("Camera Control")]
     [SerializeField] private Transform cameraTarget;
     [Range(.5f, 1f)]
     [SerializeField] private float minCameraDistance = 1.5f;
-    [Range(1,3f)]
+    [Range(1, 3f)]
     [SerializeField] private float maxCameraDistance = 4f;
-    [Range(3f,5f)]
+    [Range(3f, 5f)]
     [SerializeField] private float cameraSensetivity = 5f;
 
     [Space]
@@ -31,11 +33,35 @@ public class PlayerAim : MonoBehaviour
 
     private void Update()
     {
-        aim.position = GetMouseHitInfo().point;
-        aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
+        if (Input.GetKeyDown(KeyCode.P))
+            isAimingPrecisly = !isAimingPrecisly;
 
+        UpdateAimPosition();
+        UpdateCameraPosition();
+    }
+
+    private void UpdateCameraPosition()
+    {
         cameraTarget.position = Vector3.Lerp(cameraTarget.position, DesiredCameraPosition(), cameraSensetivity * Time.deltaTime);
     }
+
+    private void UpdateAimPosition()
+    {
+        aim.position = GetMouseHitInfo().point;
+
+        // Obstacleなどにエイムが乗っても、高さを考慮して打つかどうかのフラグ
+        if (isAimingPrecisly == false)
+            aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
+    }
+
+    public bool CanAimPrecisly()
+    {
+        if (isAimingPrecisly)
+            return true;
+
+        return false;
+    }
+
 
     private Vector3 DesiredCameraPosition()
     {

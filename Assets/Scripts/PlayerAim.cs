@@ -32,7 +32,7 @@ public class PlayerAim : MonoBehaviour
     private void Update()
     {
         aim.position = GetMouseHitInfo().point;
-        aim.position = new Vector3(aim.position.x, transform.position.y, aim.position.z);
+        aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
 
         cameraTarget.position = Vector3.Lerp(cameraTarget.position, DesiredCameraPosition(), cameraSensetivity * Time.deltaTime);
     }

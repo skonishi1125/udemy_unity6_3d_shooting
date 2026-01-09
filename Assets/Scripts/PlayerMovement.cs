@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector3 movementDirection;
     [SerializeField] private float gravityScale = 9.81f;
-    private Vector2 moveInput;
+    public Vector2 moveInput { get; private set; }
     private bool isRunning;
 
     private void Start()
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
     private void ApplyRotation()
     {
         // Playerからポインタへ向かうベクトル
-        Vector3 lookingDirection = player.aim.GetMousePosition() - transform.position;
+        Vector3 lookingDirection = player.aim.GetMouseHitInfo().point - transform.position;
         lookingDirection.y = 0f;
         lookingDirection.Normalize(); // 上で求めたベクトルを単位ベクトルにする(方向だけ取り出す)
 

@@ -3124,7 +3124,6 @@ MonoBehaviour:
   bulletSpeed: 20
   gunPoint: {fileID: 706451103}
   weaponHolder: {fileID: 894329410}
-  aim: {fileID: 1733981899}
 --- !u!114 &2040055453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3177,7 +3176,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimLaser: {fileID: 894329411}
-  tipLength: 0.5
   aim: {fileID: 1733981899}
   isAimingPrecisly: 0
   isLockingToTarget: 1

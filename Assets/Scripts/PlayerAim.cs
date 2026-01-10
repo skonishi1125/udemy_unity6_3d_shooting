@@ -52,13 +52,24 @@ public class PlayerAim : MonoBehaviour
     {
         Transform gunPoint = player.weapon.GunPoint();
         Vector3 laserDirection = player.weapon.BulletDirection();
-        float gunDistance = 4;
+
+        float laserTipLength = .5f;
+        float gunDistance = 4f;
 
         // Line Rendererの位置を銃口にセット
         // 指定した距離の分だけ伸ばす
-        aimLaser.SetPosition(0, gunPoint.position);
         Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
+
+        if(Physics.Raycast(gunPoint.position, laserDirection, out RaycastHit hit, gunDistance))
+        {
+            endPoint = hit.point;
+            laserTipLength = 0f;
+        }
+
+        aimLaser.SetPosition(0, gunPoint.position);
         aimLaser.SetPosition(1, endPoint);
+        aimLaser.SetPosition(2, endPoint + laserDirection * laserTipLength);
+
     }
 
     public Transform Target()

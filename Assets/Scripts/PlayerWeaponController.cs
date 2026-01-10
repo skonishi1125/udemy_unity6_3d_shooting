@@ -10,7 +10,6 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private Transform gunPoint;
 
     [SerializeField] private Transform weaponHolder;
-    [SerializeField] private Transform aim;
 
     private void Start()
     {
@@ -33,6 +32,9 @@ public class PlayerWeaponController : MonoBehaviour
     // 弾丸の方向決定
     public Vector3 BulletDirection()
     {
+
+        Transform aim = player.aim.Aim();
+
         // direction = aim - gunPoint
         // ベクトルは、終点 - 始点で表せる。なので、マウスポジションに向かってgunPointから伸びるベクトルを表す
         // normalizedで長さを1にすることで単位ベクトルになり、向きだけ取り出せる。
@@ -42,8 +44,8 @@ public class PlayerWeaponController : MonoBehaviour
         if (player.aim.CanAimPrecisly() == false && player.aim.Target() == null)
             direction.y = 0; // 上下方向を無視して水平に飛ばすようにしている
 
-        weaponHolder.LookAt(aim);
-        gunPoint.LookAt(aim);
+        //weaponHolder.LookAt(aim);
+        //gunPoint.LookAt(aim);
 
         return direction;
     }

@@ -43,12 +43,12 @@ public class PlayerAim : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
             isLockingToTarget = !isLockingToTarget;
 
-        UpdateAimLaser();
+        UpdateAimVisuals();
         UpdateAimPosition();
         UpdateCameraPosition();
     }
 
-    private void UpdateAimLaser()
+    private void UpdateAimVisuals()
     {
         Transform gunPoint = player.weapon.GunPoint();
         Vector3 laserDirection = player.weapon.BulletDirection();
@@ -71,25 +71,6 @@ public class PlayerAim : MonoBehaviour
         aimLaser.SetPosition(2, endPoint + laserDirection * laserTipLength);
 
     }
-
-    public Transform Target()
-    {
-        Transform target = null;
-
-        // マウスの位置にTargetがいた場合、ターゲットにポジションを固定させて当てやすくしている
-        if(GetMouseHitInfo().transform.GetComponent<Target>() != null)
-        {
-            target = GetMouseHitInfo().transform;
-        }
-
-        return target;
-    }
-
-    private void UpdateCameraPosition()
-    {
-        cameraTarget.position = Vector3.Lerp(cameraTarget.position, DesiredCameraPosition(), cameraSensetivity * Time.deltaTime);
-    }
-
     private void UpdateAimPosition()
     {
 
@@ -109,15 +90,46 @@ public class PlayerAim : MonoBehaviour
             aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
     }
 
-    public bool CanAimPrecisly()
-    {
-        if (isAimingPrecisly)
-            return true;
 
-        return false;
+
+
+
+    public Transform Target()
+    {
+        Transform target = null;
+
+        // マウスの位置にTargetがいた場合、ターゲットにポジションを固定させて当てやすくしている
+        if(GetMouseHitInfo().transform.GetComponent<Target>() != null)
+        {
+            target = GetMouseHitInfo().transform;
+        }
+
+        return target;
+    }
+    public Transform Aim() => aim;
+
+    public bool CanAimPrecisly() => isAimingPrecisly;
+
+
+
+    public RaycastHit GetMouseHitInfo()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(aimInput);
+        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, aimLayerMask))
+        {
+            lastKnownMouseHit = hitInfo;
+            return hitInfo;
+        }
+
+        return lastKnownMouseHit;
+
     }
 
-
+    #region Camera Region
+    private void UpdateCameraPosition()
+    {
+        cameraTarget.position = Vector3.Lerp(cameraTarget.position, DesiredCameraPosition(), cameraSensetivity * Time.deltaTime);
+    }
     private Vector3 DesiredCameraPosition()
     {
 
@@ -156,18 +168,7 @@ public class PlayerAim : MonoBehaviour
         return desiredCameraPosition;
     }
 
-    public RaycastHit GetMouseHitInfo()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(aimInput);
-        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, aimLayerMask))
-        {
-            lastKnownMouseHit = hitInfo;
-            return hitInfo;
-        }
-
-        return lastKnownMouseHit;
-
-    }
+    #endregion
 
     private void AssignInputEvents()
     {
